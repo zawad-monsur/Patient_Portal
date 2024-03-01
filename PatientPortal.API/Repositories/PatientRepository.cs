@@ -5,7 +5,7 @@ namespace PatientPortal.API.Repositories
 {
     public class PatientRepository : IPatientRepository
     {
-        private readonly PatientsContext _context; // Replace with your context name
+        private readonly PatientsContext _context; 
 
         public PatientRepository(PatientsContext context)
         {
@@ -14,22 +14,22 @@ namespace PatientPortal.API.Repositories
 
         public async Task<IEnumerable<DiseaseInformation>> GetDiseasesAsync()
         {
-            return await _context.DiseaseInformations.ToListAsync(); // Replace with your query logic
+            return await _context.DiseaseInformations.ToListAsync(); 
         }
 
         public async Task<IEnumerable<Ncd>> GetNcdsAsync()
         {
-            return await _context.Ncds.ToListAsync(); // Replace with your query logic
+            return await _context.Ncds.ToListAsync(); 
         }
 
         public async Task<IEnumerable<Allergy>> GetAllergiesAsync()
         {
-            return await _context.Allergies.ToListAsync(); // Replace with your query logic
+            return await _context.Allergies.ToListAsync(); 
         }
 
         public async Task<IEnumerable<PatientsInformation>> GetPatientsAsync()
         {
-            return await _context.PatientsInformations.ToListAsync(); // Replace with your query logic
+            return await _context.PatientsInformations.ToListAsync(); 
         }
 
         public async Task SavePatientAsync(PatientsInformation patient)

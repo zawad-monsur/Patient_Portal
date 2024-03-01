@@ -9,13 +9,14 @@ namespace SharedModels.ViewModels
 {
     public class PatientViewModel
     {
-        public required string PatientName { get; set; }
+        public string PatientName { get; set; }
         public int DiseaseInformationId { get; set; }
         public bool HasEpilepsy { get; set; }
         public List<int>? SelectedNcdIds { get; set; }
         public List<int>? SelectedAllergyIds { get; set; }
 
         public List<Ncd>? AvailableNcds { get; set; }
+        public List<DiseaseInformation>? AvailableDiseases { get; set; }
         public List<Allergy>? AvailableAllergies { get; set; }
     }
 

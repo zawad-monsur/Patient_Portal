@@ -58,19 +58,19 @@ namespace PatientPortal.API.Controllers
             }
         }
 
-        [HttpGet("patients")]
-        public async Task<IActionResult> GetPatients()
-        {
-            try
-            {
-                var patients = await _patientService.GetPatientsAsync();
-                return Ok(patients);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
-        }
+        //[HttpGet("patients")]
+        //public async Task<IActionResult> GetPatients()
+        //{
+        //    try
+        //    {
+        //        var patients = await _patientService.GetPatientsAsync();
+        //        return Ok(patients);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, ex.Message);
+        //    }
+        //}
 
         [HttpPost]
         public async Task<IActionResult> Save([FromBody] PatientViewModel patient)

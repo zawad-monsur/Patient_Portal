@@ -1,5 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using PartientPortal.MVC.Models;
+using SharedModels.Models;
+using SharedModels.ViewModels;
 using System.Diagnostics;
 
 namespace PartientPortal.MVC.Controllers
@@ -13,20 +16,83 @@ namespace PartientPortal.MVC.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Patient()
         {
-            return View();
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri("https://localhost:7027/"); 
+
+                    var diseasesResponse = await client.GetAsync("/api/Patients/diseases");
+                    var ncdsResponse = await client.GetAsync("/api/Patients/ncds");
+                    var allergiesResponse = await client.GetAsync("/api/Patients/allergies");
+
+                    if (diseasesResponse.IsSuccessStatusCode && ncdsResponse.IsSuccessStatusCode && allergiesResponse.IsSuccessStatusCode)
+                    {
+                        var diseasesContent = await diseasesResponse.Content.ReadAsStringAsync();
+                        var ncdsContent = await ncdsResponse.Content.ReadAsStringAsync();
+                        var allergiesContent = await allergiesResponse.Content.ReadAsStringAsync();
+
+                        var diseases = JsonConvert.DeserializeObject<List<DiseaseInformation>>(diseasesContent);
+                        var ncds = JsonConvert.DeserializeObject<List<Ncd>>(ncdsContent);
+                        var allergies = JsonConvert.DeserializeObject<List<Allergy>>(allergiesContent);
+
+                        // Create view model
+                        var model = new PatientViewModel
+                        {
+                            AvailableDiseases = diseases,
+                            AvailableNcds = ncds,
+                            AvailableAllergies = allergies
+                        };
+
+                        return View(model);
+                    }
+                    else
+                    {
+                        return View("Error");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error fetching data: {ex.Message}");
+                return View("Error");
+            }
         }
 
-        public IActionResult Privacy()
+        [HttpPost]
+        public async Task<IActionResult> SavePatient(PatientViewModel patient)
         {
-            return View();
+            try
+            {
+                // Use HttpClient to send patient data to WebAPI endpoint for saving
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri("https://localhost:7027/"); // Adjust base address
+
+                    var response = await client.PostAsJsonAsync("/api/Patients", patient);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var savedPatient = await response.Content.ReadFromJsonAsync<PatientViewModel>();
+                        return RedirectToAction("Patient"); // Redirect to the patient view after successful save
+                    }
+                    else
+                    {
+                        // Handle API call failure during save
+                        _logger.LogError($"Error saving patient: {response.ReasonPhrase}");
+                        return View("Error");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle any exception during data saving
+                _logger.LogError($"Error saving patient: {ex.Message}");
+                return View("Error");
+            }
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
     }
 }

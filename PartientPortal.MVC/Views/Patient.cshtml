@@ -1,0 +1,118 @@
+﻿@model SharedModels.ViewModels.PatientViewModel
+
+@{
+    ViewData["Title"] = "Patient Portal";
+}
+
+<h1>Patient Information</h1>
+
+<form asp-action="Save" method="post">
+    <div class="form-group">
+        <label asp-for="PatientName">Patient Name:</label>
+        <input asp-for="PatientName" class="form-control" />
+        <span asp-validation-for="PatientName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="DiseaseInformationId">Disease Name:</label>
+        <select asp-for="DiseaseInformationId" class="form-control">
+            <option>Select Disease...</option>
+        </select>
+        <span asp-validation-for="DiseaseInformationId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label>Epilepsy:</label>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" asp-for="HasEpilepsy" />
+            <label class="form-check-label" for="HasEpilepsy">Yes</label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label>NCDs:</label>
+        <div class="row">
+            <div class="col-md-6">
+                <select id="availableNcds" class="form-control" multiple>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <button type="button" class="btn btn-primary" id="addNcd">Add</button>
+                <button type="button" class="btn btn-danger" id="removeNcd">Remove</button>
+                <br />
+                <select id="selectedNcds" class="form-control" multiple asp-for="SelectedNcdIds">
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Allergies:</label>
+        <div class="row">
+            <div class="col-md-6">
+                <select id="availableAllergies" class="form-control" multiple>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <button type="button" class="btn btn-primary" id="addAllergy">Add</button>
+                <button type="button" class="btn btn-danger" id="removeAllergy">Remove</button>
+                <br />
+                <select id="selectedAllergies" class="form-control" multiple asp-for="SelectedAllergyIds">
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Save" class="btn btn-primary" />
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Implement logic to populate disease options dynamically
+
+            // Implement logic to populate available NCD and allergy options dynamically
+
+            // Add button click event handler for NCDs
+            $("#addNcd").click(function () {
+                // Get selected options from available NCDs list
+                var selectedNcds = $("#availableNcds option:selected").val();
+
+                // Check if any option is selected
+                if (selectedNcds) {
+                    // Move selected options to the selected NCDs list
+                    $("#selectedNcds").append($("#availableNcds option:selected").clone());
+                    // Remove the selected options from the available list
+                    $("#availableNcds option:selected").remove();
+                } else {
+                    alert("Please select an NCD to add.");
+                }
+            });
+
+            // Remove button click event handler for NCDs
+            $("#removeNcd").click(function () {
+                // Get selected options from selected NCDs list
+                var selectedNcds = $("#selectedNcds option:selected").val();
+
+                // Check if any option is selected
+                if (selectedNcds) {
+                    // Move selected options to the available NCDs list
+                    $("#availableNcds").append($("#selectedNcds option:selected").clone());
+                    // Remove the selected options from the selected list
+                    $("#selectedNcds option:selected").remove();
+                } else {
+                    alert("Please select an NCD to remove.");
+                }
+            });
+
+            // Add button click event handler for Allergies
+            $("#addAllergy").click(function () {
+                // Similar logic as for NCDs, replacing "Ncd" with "Allergy"
+                // ... (implement similar logic as NCDs)
+            });
+
+            // Remove button click event handler for Allergies
+            $("#removeAllergy").click(function () {
+                // Similar logic as for NCDs, replacing "Ncd" with "Allergy"
+                // ... (implement similar logic as NCDs)
+            });
+        });
+    </script>
+}

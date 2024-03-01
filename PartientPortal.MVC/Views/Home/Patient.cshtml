@@ -5,7 +5,6 @@
     ViewData["Title"] = "Patient Portal";
 }
 <style>
-    /* Add some custom styling for better layout */
     .centered-form {
         display: flex;
         justify-content: center;
@@ -25,20 +24,21 @@
         color: #fff;
     }
 </style>
+
 <div class="centered-form">
     <div class="form-container">
         <h1>Patient Information</h1>
 
         <form asp-action="SavePatient" method="post" id="patientForm">
             <div class="form-group">
-                <label asp-for="PatientName">Patient Name:</label>
-                <input asp-for="PatientName" class="form-control" />
+                <label asp-for="PatientName">Patient Name *</label>
+                <input asp-for="PatientName" class="form-control" required />
                 <span asp-validation-for="PatientName" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="DiseaseInformationId">Diseases Name:</label>
-                <select asp-for="DiseaseInformationId" class="form-control">
+                <label asp-for="DiseaseInformationId">Diseases Name *</label>
+                <select asp-for="DiseaseInformationId" class="form-control" required>
                     @foreach (var disease in Model.AvailableDiseases)
                     {
                         <option value="@disease.DiseaseId">@disease.DiseaseName</option>
@@ -48,8 +48,8 @@
             </div>
 
             <div class="form-group">
-                <label for="HasEpilepsy">Epilepsy:</label>
-                <select asp-for="HasEpilepsy" class="form-control">
+                <label for="HasEpilepsy">Epilepsy *</label>
+                <select asp-for="HasEpilepsy" class="form-control" required>
                     <option value="true">Yes</option>
                     <option value="false">No</option>
                 </select>

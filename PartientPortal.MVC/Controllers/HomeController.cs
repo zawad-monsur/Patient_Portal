@@ -66,21 +66,19 @@ namespace PartientPortal.MVC.Controllers
         {
             try
             {
-                // Use HttpClient to send patient data to WebAPI endpoint for saving
                 using (var client = new HttpClient())
                 {
-                    client.BaseAddress = new Uri("https://localhost:7027/"); // Adjust base address
+                    client.BaseAddress = new Uri("https://localhost:7027/"); 
 
                     var response = await client.PostAsJsonAsync("/api/Patients", patient);
 
                     if (response.IsSuccessStatusCode)
                     {
                         var savedPatient = await response.Content.ReadFromJsonAsync<PatientViewModel>();
-                        return RedirectToAction("Patient"); // Redirect to the patient view after successful save
+                        return RedirectToAction("Patient");
                     }
                     else
                     {
-                        // Handle API call failure during save
                         _logger.LogError($"Error saving patient: {response.ReasonPhrase}");
                         return View("Error");
                     }
@@ -88,7 +86,6 @@ namespace PartientPortal.MVC.Controllers
             }
             catch (Exception ex)
             {
-                // Handle any exception during data saving
                 _logger.LogError($"Error saving patient: {ex.Message}");
                 return View("Error");
             }
